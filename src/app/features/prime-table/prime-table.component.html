@@ -1,0 +1,49 @@
+<p-table
+  class="prime-table"
+  [value]="data"
+  [tableStyle]="{ width: '50rem' }"
+  [columns]="columns"
+  (onRowSelect)="onSelectItem($event.data)"
+  (onRowUnselect)="onUnSelectItem()"
+  selectionMode="single"
+  (sortFunction)="customSort($event)"
+  [customSort]="true"
+  [paginator]="true"
+  [rows]="5"
+  [rowsPerPageOptions]="[5, 10, 15]"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <ng-container *ngFor="let col of columns">
+        <th [pSortableColumn]="col.field">{{ col.header }}<p-sortIcon [field]="col.field"></p-sortIcon></th>
+      </ng-container>
+      <ng-container *ngIf="actionsEnabled">
+        <th style="width: 15rem"></th>
+      </ng-container>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <ng-container *ngIf="selectable">
+      <tr [pSelectableRow]="item">
+        <td *ngFor="let col of columns">{{ item[col.field] }}</td>
+        <ng-container *ngIf="actionsEnabled">
+          <td class="row-buttons">
+            <button pButton type="button" label="Edit" (click)="onEditItem(item)"></button>
+            <button pButton type="button" label="Remove" (click)="onRemoveItem(item)"></button>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="!selectable">
+      <tr>
+        <td *ngFor="let col of columns">{{ item[col.field] }}</td>
+        <ng-container *ngIf="actionsEnabled">
+          <td class="row-buttons">
+            <button pButton type="button" label="Edit" (click)="onEditItem(item)"></button>
+            <button pButton type="button" label="Remove" (click)="onRemoveItem(item)"></button>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-container>
+  </ng-template>
+</p-table>

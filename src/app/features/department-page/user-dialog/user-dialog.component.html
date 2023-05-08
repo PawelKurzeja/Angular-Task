@@ -1,0 +1,31 @@
+<p-dialog
+  (onShow)="showDialog()"
+  (onHide)="hideDialog()"
+  [modal]="true"
+  [closable]="false"
+  [visible]="dialogVisible$ | async"
+  [style]="{ width: '30rem' }"
+  [draggable]="false"
+>
+  <p-header>{{ (editUser$ | async) ? "Edit User" : "Create User" }}</p-header>
+  <form class="form" [formGroup]="userForm">
+    <ng-container *ngIf="departments$ | async as departments">
+      <label>Departments</label>
+      <p-dropdown
+        formControlName="department"
+        [options]="departments.records"
+        optionLabel="name"
+        [style]="{ width: '15rem' }"
+        [readonly]="!!((selectedDepartment$ | async) && isNull(editUser$ | async))"
+      ></p-dropdown>
+    </ng-container>
+    <label>User name</label>
+    <input pInputText type="text" formControlName="name" />
+    <label>Email</label>
+    <input pInputText type="email" formControlName="email" />
+    <div class="buttons-container">
+      <button type="button" pButton label="Save" (click)="saveUser()" [disabled]="userForm.invalid"></button>
+      <button type="button" pButton label="Cancel" (click)="hideDialog()"></button>
+    </div>
+  </form>
+</p-dialog>

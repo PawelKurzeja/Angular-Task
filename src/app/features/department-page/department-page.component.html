@@ -1,0 +1,62 @@
+<div class="content-wrapper">
+  <ng-container *ngIf="(isDatabaseError$ | async) === false; else error">
+    <ng-container *ngIf="departmentsVm$ | async as vm">
+      <ng-container *ngIf="vm.readiness === Readiness.Ready; else loading">
+        <div class="single-table-wrapper">
+          <div class="title-row">
+            <div class="title">Departments</div>
+            <button class="add-button" pButton type="button" label="Create Department" (click)="onAddDepartmentClick()"></button>
+          </div>
+          <app-prime-table
+            [selectable]="true"
+            [actionsEnabled]="true"
+            [data]="vm.records"
+            [columns]="departmentTableColumns"
+            (editItem)="onEditDepartment($event)"
+            (removeItem)="onRemoveDepartment($event)"
+            (selectItem)="onSelectDepartment($event)"
+            (unSelectItem)="onUnSelectDepartment()"
+          ></app-prime-table>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isNotNull(selectedDepartment$ | async)">
+      <ng-container *ngIf="usersVm$ | async as vm">
+        <ng-container *ngIf="vm.readiness === Readiness.Ready || vm.readiness === Readiness.Pending">
+          <div class="single-table-wrapper">
+            <div class="title-row">
+              <div class="title">Users</div>
+              <button
+                [disabled]="isNull(selectedDepartment$ | async)"
+                class="add-button"
+                pButton
+                type="button"
+                label="Create User"
+                (click)="onAddUserClick()"
+              ></button>
+            </div>
+            <app-prime-table
+              [actionsEnabled]="isNotNull(selectedDepartment$ | async)"
+              [data]="vm.records"
+              [columns]="userTableColumns"
+              (editItem)="onEditUser($event)"
+              (removeItem)="onRemoveUser($event)"
+            ></app-prime-table>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #error>
+  <h1>There was an error in the database. Please refresh the page.</h1>
+</ng-template>
+
+<ng-template #loading>
+  <p-progressSpinner></p-progressSpinner>
+</ng-template>
+
+<app-department-dialog (save)="onDepartmentSave($event)" [dialogVisible$]="showDepartmentDialog$"></app-department-dialog>
+<app-user-dialog (save)="onUserSave($event)" [dialogVisible$]="showUserDialog$"></app-user-dialog>

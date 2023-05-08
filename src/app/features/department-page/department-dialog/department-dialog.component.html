@@ -1,0 +1,19 @@
+<p-dialog
+  (onShow)="showDialog()"
+  (onHide)="hideDialog()"
+  [modal]="true"
+  [closable]="false"
+  [visible]="dialogVisible$ | async"
+  [style]="{ width: '30rem' }"
+  [draggable]="false"
+>
+  <p-header>{{ (editDepartment$ | async) ? "Edit Department" : "Create Department" }}</p-header>
+  <form class="form" [formGroup]="departmentForm">
+    <div class="name">Department name</div>
+    <input pInputText type="text" formControlName="name" />
+    <div class="buttons-container">
+      <button type="button" pButton label="Save" (click)="saveDepartment()" [disabled]="departmentForm.invalid"></button>
+      <button type="button" pButton label="Cancel" (click)="hideDialog()"></button>
+    </div>
+  </form>
+</p-dialog>
